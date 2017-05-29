@@ -31,8 +31,30 @@
 
   var scroller = new nx.NativeScroller(parent,child,refresher);
   scroller.on('move',function(){
-    console.log('move...');
-  })
+//    console.log('move...');
+  });
+
+
+  scroller.on('init',function(){
+    console.log('init...');
+  });
+
+
+  scroller.on('active',function(){
+    console.log('active...');
+  });
+
+  scroller.on('load',function(){
+    console.log('start to load data...');
+  });
+
+  scroller.on('loaded',function(){
+    console.log('loaded , to finish...');
+  });
+
+  scroller.on('finish',function(){
+    console.log('finish!');
+  });
 </script>
 </body>
 </html>

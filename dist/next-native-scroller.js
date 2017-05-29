@@ -16,6 +16,8 @@
       };
   })();
 
+
+  //events detect:
   var touchStartEvent, touchMoveEvent, touchEndEvent;
   if (global.navigator.pointerEnabled) {
     touchStartEvent = 'pointerdown';
@@ -34,6 +36,11 @@
     touchMoveEvent = 'mousemove';
     touchEndEvent = 'mouseup';
   }
+
+  //animations:
+  var Animate = {
+
+  };
 
 
   var isDragging = false,
@@ -93,10 +100,10 @@
         var self = this;
         setTimeout(function () {
 
-          global.requestAnimationFrame(self.tail);
+          global.requestAnimationFrame(self.tail.bind(self));
 
           // scroll back to home during tail animation
-          self.scrollTo(0, scrollTime, self.deactivate);
+          self.scrollTo(0, scrollTime, self.deactivate.bind(this));
 
           // return to native scrolling after tail animation has time to finish
           setTimeout(function () {
@@ -141,7 +148,7 @@
 
             // the user has overscrolled but not far enough to trigger a refresh
           } else {
-            this.scrollTo(0, scrollTime, this.deactivate);
+            this.scrollTo(0, scrollTime, this.deactivate.bind(this));
             isOverscrolling = false;
           }
         }
@@ -304,6 +311,7 @@
         global.requestAnimationFrame(scroll);
       },
       show: function () {
+        this.fire('init');
         refresher.classList.remove('invisible');
       },
       hide: function () {
@@ -311,19 +319,25 @@
       },
       activate: function () {
         refresher.classList.add('active');
+        this.fire('active');
       },
       deactivate: function () {
+        var self = this;
         setTimeout(function () {
           refresher.classList.remove('active');
           refresher.classList.remove('refreshing');
           refresher.classList.remove('refreshing-tail');
           activated && (activated = false);
+
+          self.fire('finish');
         }, 150);
       },
       tail: function () {
         refresher.classList.add('refreshing-tail');
+        this.fire('loaded')
       },
       start: function () {
+        this.fire('load');
         refresher.classList.add('refreshing');
         this.finish();
       }
