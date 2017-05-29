@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="test.css">
+</head>
+<body>
+<div class="ion-content overflow-scroll">
+  <div class="invisible ion-refresher">
+    I am refresher...
+  </div>
+
+  <div class="scroll body">
+    body content....
+  </div>
+
+</div>
+<script type="text/javascript" src="../node_modules/next-js-core2/dist/next-js-core2.js"></script>
+<script src="../dist/next-native-scroller.js"></script>
+<script>
+
+  //refreisher
+  var refresher = document.querySelector('.ion-refresher');
+  var parent = document.querySelector('.ion-content');
+  var child = document.querySelector('.body');
+
+
+  new nx.NativeScroller(parent,child,refresher);
+
+</script>
+</body>
+</html>

@@ -63,25 +63,25 @@
         scrollChild = inScrollChild;
         refresher = inRefresher;
 
-        Event.on(touchStartEvent, this.handleTouchstart, scrollChild);
-        Event.on(touchMoveEvent, this.handleTouchmove, scrollChild);
-        Event.on(touchEndEvent, this.handleTouchend, scrollChild);
-        Event.on('mousedown', this.handleMousedown, scrollChild);
-        Event.on('mousemove', this.handleTouchmove, scrollChild);
-        Event.on('mouseup', this.handleTouchend, scrollChild);
-        Event.on('scroll', this.handleScroll, scrollParent);
+        Event.on(touchStartEvent, this.handleTouchstart.bind(this), scrollChild);
+        Event.on(touchMoveEvent, this.handleTouchmove.bind(this), scrollChild);
+        Event.on(touchEndEvent, this.handleTouchend.bind(this), scrollChild);
+        Event.on('mousedown', this.handleMousedown.bind(this), scrollChild);
+        Event.on('mousemove', this.handleTouchmove.bind(this), scrollChild);
+        Event.on('mouseup', this.handleTouchend.bind(this), scrollChild);
+        Event.on('scroll', this.handleScroll.bind(this), scrollParent);
       },
       destroy: function () {
         if (scrollChild) {
-          Event.off(touchStartEvent, this.handleTouchstart, scrollChild);
-          Event.off(touchMoveEvent, this.handleTouchmove, scrollChild);
-          Event.off(touchEndEvent, this.handleTouchend, scrollChild);
-          Event.off('mousedown', this.handleMousedown, scrollChild);
-          Event.off('mousemove', this.handleTouchmove, scrollChild);
-          Event.off('mouseup', this.handleTouchend, scrollChild);
+          Event.off(touchStartEvent, this.handleTouchstart.bind(this), scrollChild);
+          Event.off(touchMoveEvent, this.handleTouchmove.bind(this), scrollChild);
+          Event.off(touchEndEvent, this.handleTouchend.bind(this), scrollChild);
+          Event.off('mousedown', this.handleMousedown.bind(this), scrollChild);
+          Event.off('mousemove', this.handleTouchmove.bind(this), scrollChild);
+          Event.off('mouseup', this.handleTouchend.bind(this), scrollChild);
         }
         if (scrollParent) {
-          Event.off('scroll', this.handleScroll, scrollParent);
+          Event.off('scroll', this.handleScroll.bind(this), scrollParent);
         }
         scrollParent = null;
         scrollChild = null;
@@ -90,10 +90,10 @@
         var self = this;
         setTimeout(function () {
 
-          global.requestAnimationFrame(tail);
+          global.requestAnimationFrame(self.tail);
 
           // scroll back to home during tail animation
-          scrollTo(0, scrollTime, self.deactivate);
+          self.scrollTo(0, scrollTime, self.deactivate);
 
           // return to native scrolling after tail animation has time to finish
           setTimeout(function () {
@@ -142,11 +142,11 @@
           // the user has scroll far enough to trigger a refresh
           if (lastOverscroll > ptrThreshold) {
             this.start();
-            scrollTo(ptrThreshold, scrollTime);
+            this.scrollTo(ptrThreshold, scrollTime);
 
             // the user has overscrolled but not far enough to trigger a refresh
           } else {
-            scrollTo(0, scrollTime, this.deactivate);
+            this.scrollTo(0, scrollTime, this.deactivate);
             isOverscrolling = false;
           }
         }
@@ -221,11 +221,11 @@
         // update the icon accordingly
         if (!activated && lastOverscroll > ptrThreshold) {
           activated = true;
-          global.requestAnimationFrame(activate);
+          global.requestAnimationFrame(this.activate.bind(this));
 
         } else if (activated && lastOverscroll < ptrThreshold) {
           activated = false;
-          global.requestAnimationFrame(deactivate);
+          global.requestAnimationFrame(this.deactivate.bind(this));
         }
       },
       handleScroll: function (e) {
@@ -247,23 +247,25 @@
       setScrollLock: function (enabled) {
         // set the scrollbar to be position:fixed in preparation to overscroll
         // or remove it so the app can be natively scrolled
+        var self = this;
         if (enabled) {
           global.requestAnimationFrame(function () {
             scrollChild.classList.add('overscroll');
-            this.show();
+            self.show();
           });
 
         } else {
           global.requestAnimationFrame(function () {
             scrollChild.classList.remove('overscroll');
-            this.hide();
-            this.deactivate();
+            self.hide();
+            self.deactivate();
           });
         }
       },
       scrollTo: function (Y, duration, callback) {
         // scroll animation loop w/ easing
         // credit https://gist.github.com/dezinezync/5487119
+        var self = this;
         var start = Date.now(),
           from = lastOverscroll;
 
@@ -286,7 +288,7 @@
             // fraction based on the easing method
             easedT = easeOutCubic(time);
 
-          this.overscroll(Math.floor((easedT * (Y - from)) + from));
+          self.overscroll(Math.floor((easedT * (Y - from)) + from));
 
           if (time < 1) {
             global.requestAnimationFrame(scroll);
@@ -295,7 +297,7 @@
 
             if (Y < 5 && Y > -5) {
               isOverscrolling = false;
-              setScrollLock(false);
+              self.setScrollLock(false);
             }
 
             callback && callback();
@@ -327,6 +329,7 @@
       },
       start: function () {
         refresher.classList.add('refreshing');
+        this.finish();
       }
     }
   });
