@@ -1,0 +1,26 @@
+{
+  "name": "next-native-scroller",
+  "description": "Scroller based on native scroller &amp; next js.",
+  "main": "dist/next-native-scroller.js",
+  "authors": [
+    "afei"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "next"
+  ],
+  "homepage": "https://github.com/afeiship/next-native-scroller",
+  "moduleType": [
+    "amd"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src",
+    "gulp",
+    "gulpfile.js"
+  ]
+}
