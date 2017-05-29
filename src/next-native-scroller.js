@@ -6,14 +6,61 @@
   var CSS_TRANSFORM = '-webkit-transform';
   var Event = {
     on: function (type, callback, element) {
-      var el = element || global;
-      el.addEventListener(type, callback);
+      element.addEventListener(type, callback);
     },
     off: function (type, callback, element) {
       element.removeEventListener(type, callback);
     }
   };
 
+  var addEventListener = (function () {
+    if (document.addEventListener) {
+      return function (inElement, inName, inCallback, inCapture) {
+        inElement.addEventListener(inName, inCallback, inCapture || false);
+      }
+    } else if (document.attachEvent) {
+      return function (inElement, inName, inCallback) {
+        var name = 'on' + inName;
+        inElement.attachEvent(name, function (e) {
+          e = e || global.event;
+          e.target = e.target || e.srcElement;
+          e.currentTarget = node;
+          inCallback.call(node, e);
+        });
+      };
+    }
+  })();
+
+  var removeEventListener = (function () {
+    if (document.removeEventListener) {
+      return function (inElement, inName, inCallback, inCapture) {
+        inElement.removeEventListener(inName, inCallback, inCapture || false);
+      }
+    } else if (document.detachEvent) {
+      return function (inElement, inName, inCallback) {
+        var name = 'on' + inName;
+        inElement.detachEvent(name, function (e) {
+          e = e || global.event;
+          e.target = e.target || e.srcElement;
+          e.currentTarget = node;
+          inCallback.call(node, e);
+        });
+      };
+    }
+  })();
+
+  var DomUtils = {
+    on: function () {
+      var context = arguments[0];
+      var args = Array.prototype.slice.call(arguments, 1);
+      addEventListener.apply(context, args);
+      return {
+        destroy: function () {
+          return removeEventListener.apply(context, args);
+        }
+      }
+    }
+  };
 
   //raf polyfill:
   global.requestAnimFrame = (function () {
@@ -63,13 +110,23 @@
         scrollChild = inScrollChild;
         refresher = inRefresher;
 
-        Event.on(touchStartEvent, this.handleTouchstart.bind(this), scrollChild);
-        Event.on(touchMoveEvent, this.handleTouchmove.bind(this), scrollChild);
-        Event.on(touchEndEvent, this.handleTouchend.bind(this), scrollChild);
-        Event.on('mousedown', this.handleMousedown.bind(this), scrollChild);
-        Event.on('mousemove', this.handleTouchmove.bind(this), scrollChild);
-        Event.on('mouseup', this.handleTouchend.bind(this), scrollChild);
-        Event.on('scroll', this.handleScroll.bind(this), scrollParent);
+        // Event.on(touchStartEvent, this.handleTouchstart.bind(this), scrollChild);
+        // Event.on(touchMoveEvent, this.handleTouchmove.bind(this), scrollChild);
+        // Event.on(touchEndEvent, this.handleTouchend.bind(this), scrollChild);
+        // Event.on('mousedown', this.handleMousedown.bind(this), scrollChild);
+        // Event.on('mousemove', this.handleTouchmove.bind(this), scrollChild);
+        // Event.on('mouseup', this.handleTouchend.bind(this), scrollChild);
+        // Event.on('scroll', this.handleScroll.bind(this), scrollParent);
+
+        DomUtils.on(this, scrollChild,touchStartEvent,this.handleTouchstart);
+        DomUtils.on(this, scrollChild,touchMoveEvent,this.handleTouchmove);
+        DomUtils.on(this, scrollChild,touchEndEvent,this.handleTouchend);
+        DomUtils.on(this, scrollChild,'mousedown',this.handleMousedown);
+        DomUtils.on(this, scrollChild,'mousemove',this.handleTouchmove);
+        DomUtils.on(this, scrollChild,'mouseup',this.handleTouchend);
+        DomUtils.on(this, scrollParent,'scroll',this.handleScroll);
+
+
       },
       destroy: function () {
         if (scrollChild) {
