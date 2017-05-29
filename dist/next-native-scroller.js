@@ -7,8 +7,8 @@
   var CSS_TRANSFORM = '-webkit-transform';
 
   //raf polyfill:
-  global.requestAnimFrame = (function () {
-    return global.requestAnimationFrame ||
+  var requestAnimationFrame = (function () {
+    return requestAnimationFrame ||
       global.webkitRequestAnimationFrame ||
       global.mozRequestAnimationFrame ||
       function (callback) {
@@ -39,7 +39,9 @@
 
   //animations:
   var Animate = {
-
+    easeOutCubic: function (t) {
+      return (--t) * t * t + 1;
+    }
   };
 
 
@@ -61,29 +63,28 @@
   var NativeScroller = nx.declare('nx.NativeScroller', {
     methods: {
       init: function (inScrollParent, inScrollChild, inRefresher) {
-        scrollParent = inScrollParent;
-        scrollChild = inScrollChild;
-        refresher = inRefresher;
-
-        this.bindAll();
-        this._touchStartRes = nxEvent.on(scrollChild, touchStartEvent, this.handleTouchstart);
-        this._touchMoveRes = nxEvent.on(scrollChild, touchMoveEvent, this.handleTouchmove);
-        this._touchEndRes = nxEvent.on(scrollChild, touchEndEvent, this.handleTouchend);
-        this._scrollRes = nxEvent.on(scrollParent, 'scroll', this.handleScroll);
-      },
-
-      bindAll: function () {
         var HANDLERS = [
           'handleTouchstart',
           'handleTouchmove',
           'handleTouchend',
-          'handleScroll'
+          'handleScroll',
         ];
 
-        nx.each(HANDLERS, function (_, handlerName) {
-          this[handlerName] = this[handlerName].bind(this);
-        }, this);
+        window.ss = this;
+        scrollParent = inScrollParent;
+        scrollChild = inScrollChild;
+        refresher = inRefresher;
+
+        nx.bindAll(HANDLERS, this);
+
+        this._touchStartRes = nxEvent.on(scrollChild, touchStartEvent, this.handleTouchstart);
+        this._touchMoveRes = nxEvent.on(scrollChild, touchMoveEvent, this.handleTouchmove);
+        this._touchEndRes = nxEvent.on(scrollChild, touchEndEvent, this.handleTouchend);
+        this._scrollRes = nxEvent.on(scrollParent, 'scroll', this.handleScroll);
+        this._refresherHeight = refresher.offsetHeight;
+        this.overscroll(0);
       },
+
       destroy: function () {
         if (scrollChild) {
           this._touchStartRes.destroy();
@@ -100,10 +101,10 @@
         var self = this;
         setTimeout(function () {
 
-          global.requestAnimationFrame(self.tail.bind(self));
+          requestAnimationFrame(self.tail.bind(self));
 
           // scroll back to home during tail animation
-          self.scrollTo(0, scrollTime, self.deactivate.bind(this));
+          self.scrollTo(0, scrollTime, self.deactivate.bind(self));
 
           // return to native scrolling after tail animation has time to finish
           setTimeout(function () {
@@ -223,11 +224,11 @@
         // update the icon accordingly
         if (!activated && lastOverscroll > ptrThreshold) {
           activated = true;
-          global.requestAnimationFrame(this.activate.bind(this));
+          requestAnimationFrame(this.activate.bind(this));
 
         } else if (activated && lastOverscroll < ptrThreshold) {
           activated = false;
-          global.requestAnimationFrame(this.deactivate.bind(this));
+          requestAnimationFrame(this.deactivate.bind(this));
         }
       },
       handleScroll: function (e) {
@@ -235,7 +236,7 @@
         canOverscroll = (e.target.scrollTop === 0) || isDragging;
       },
       overscroll: function (val) {
-        scrollChild.style[CSS_TRANSFORM] = 'translate3d(0px, ' + val + 'px, 0px)';
+        scrollChild.style[CSS_TRANSFORM] = 'translate3d(0px, ' + (val - this._refresherHeight) + 'px, 0px)';
         lastOverscroll = val;
         this.fire('move')
       },
@@ -252,13 +253,13 @@
         // or remove it so the app can be natively scrolled
         var self = this;
         if (enabled) {
-          global.requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
             scrollChild.classList.add('overscroll');
             self.show();
           });
 
         } else {
-          global.requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
             scrollChild.classList.remove('overscroll');
             self.hide();
             self.deactivate();
@@ -278,23 +279,18 @@
           /* Prevent scrolling to the Y point if already there */
         }
 
-        // decelerating to zero velocity
-        function easeOutCubic(t) {
-          return (--t) * t * t + 1;
-        }
-
         // scroll loop
         function scroll() {
           var currentTime = Date.now(),
             time = Math.min(1, ((currentTime - start) / duration)),
             // where .5 would be 50% of time on a linear scale easedT gives a
             // fraction based on the easing method
-            easedT = easeOutCubic(time);
+            easedT = Animate.easeOutCubic(time);
 
           self.overscroll(Math.floor((easedT * (Y - from)) + from));
 
           if (time < 1) {
-            global.requestAnimationFrame(scroll);
+            requestAnimationFrame(scroll);
 
           } else {
 
@@ -308,7 +304,7 @@
         }
 
         // start scroll loop
-        global.requestAnimationFrame(scroll);
+        requestAnimationFrame(scroll);
       },
       show: function () {
         this.fire('init');
@@ -327,9 +323,11 @@
           refresher.classList.remove('active');
           refresher.classList.remove('refreshing');
           refresher.classList.remove('refreshing-tail');
-          activated && (activated = false);
 
-          self.fire('finish');
+          if (activated) {
+            activated = false;
+            self.fire('finish');
+          }
         }, 150);
       },
       tail: function () {
@@ -339,6 +337,8 @@
       start: function () {
         this.fire('load');
         refresher.classList.add('refreshing');
+
+        //todo: when load.then() to finish....
         this.finish();
       }
     }
