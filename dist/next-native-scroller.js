@@ -3,17 +3,8 @@
   var global = global || this;
 
   var nx = global.nx || require('next-js-core2');
+  var nxEvent = nx.dom.Event || require('next-dom-event');
   var CSS_TRANSFORM = '-webkit-transform';
-  var Event = {
-    on: function (type, callback, element) {
-      var el = element || global;
-      el.addEventListener(type, callback);
-    },
-    off: function (type, callback, element) {
-      element.removeEventListener(type, callback);
-    }
-  };
-
 
   //raf polyfill:
   global.requestAnimFrame = (function () {
@@ -34,10 +25,14 @@
     touchStartEvent = 'MSPointerDown';
     touchMoveEvent = 'MSPointerMove';
     touchEndEvent = 'MSPointerUp';
-  } else {
+  } else if ('ontouchstart' in window) {
     touchStartEvent = 'touchstart';
     touchMoveEvent = 'touchmove';
     touchEndEvent = 'touchend';
+  } else {
+    touchStartEvent = 'mousedown';
+    touchMoveEvent = 'mousemove';
+    touchEndEvent = 'mouseup';
   }
 
 
@@ -63,25 +58,33 @@
         scrollChild = inScrollChild;
         refresher = inRefresher;
 
-        Event.on(touchStartEvent, this.handleTouchstart.bind(this), scrollChild);
-        Event.on(touchMoveEvent, this.handleTouchmove.bind(this), scrollChild);
-        Event.on(touchEndEvent, this.handleTouchend.bind(this), scrollChild);
-        Event.on('mousedown', this.handleMousedown.bind(this), scrollChild);
-        Event.on('mousemove', this.handleTouchmove.bind(this), scrollChild);
-        Event.on('mouseup', this.handleTouchend.bind(this), scrollChild);
-        Event.on('scroll', this.handleScroll.bind(this), scrollParent);
+        this.bindAll();
+        this._touchStartRes = nxEvent.on(scrollChild, touchStartEvent, this.handleTouchstart);
+        this._touchMoveRes = nxEvent.on(scrollChild, touchMoveEvent, this.handleTouchmove);
+        this._touchEndRes = nxEvent.on(scrollChild, touchEndEvent, this.handleTouchend);
+        this._scrollRes = nxEvent.on(scrollParent, 'scroll', this.handleScroll);
+      },
+
+      bindAll: function () {
+        var HANDLERS = [
+          'handleTouchstart',
+          'handleTouchmove',
+          'handleTouchend',
+          'handleScroll'
+        ];
+
+        nx.each(HANDLERS, function (_, handlerName) {
+          this[handlerName] = this[handlerName].bind(this);
+        }, this);
       },
       destroy: function () {
         if (scrollChild) {
-          Event.off(touchStartEvent, this.handleTouchstart.bind(this), scrollChild);
-          Event.off(touchMoveEvent, this.handleTouchmove.bind(this), scrollChild);
-          Event.off(touchEndEvent, this.handleTouchend.bind(this), scrollChild);
-          Event.off('mousedown', this.handleMousedown.bind(this), scrollChild);
-          Event.off('mousemove', this.handleTouchmove.bind(this), scrollChild);
-          Event.off('mouseup', this.handleTouchend.bind(this), scrollChild);
+          this._touchStartRes.destroy();
+          this._touchMoveRes.destroy();
+          this._touchEndRes.destroy();
         }
         if (scrollParent) {
-          Event.off('scroll', this.handleScroll.bind(this), scrollParent);
+          this._scrollRes.destroy();
         }
         scrollParent = null;
         scrollChild = null;
@@ -107,21 +110,13 @@
 
         }, scrollTime);
       },
-      handleMousedown: function (e) {
-        e.touches = e.touches || [{
-            screenX: e.screenX,
-            screenY: e.screenY
-          }];
-        // Mouse needs this
-        startY = Math.floor(e.touches[0].screenY);
-      },
       handleTouchstart: function (e) {
         e.touches = e.touches || [{
             screenX: e.screenX,
             screenY: e.screenY
           }];
 
-        startY = e.touches[0].screenY;
+        startY = Math.floor(e.touches[0].screenY);
       },
       handleTouchend: function (e) {
         // reset Y
@@ -235,6 +230,7 @@
       overscroll: function (val) {
         scrollChild.style[CSS_TRANSFORM] = 'translate3d(0px, ' + val + 'px, 0px)';
         lastOverscroll = val;
+        this.fire('move')
       },
       nativescroll: function (target, newScrollTop) {
         // creates a scroll event that bubbles, can be cancelled, and with its view

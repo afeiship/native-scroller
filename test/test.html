@@ -19,6 +19,7 @@
 
 </div>
 <script type="text/javascript" src="../node_modules/next-js-core2/dist/next-js-core2.js"></script>
+<script type="text/javascript" src="../node_modules/next-dom-event/dist/next-dom-event.js"></script>
 <script src="../dist/next-native-scroller.js"></script>
 <script>
 
@@ -28,8 +29,10 @@
   var child = document.querySelector('.body');
 
 
-  new nx.NativeScroller(parent,child,refresher);
-
+  var scroller = new nx.NativeScroller(parent,child,refresher);
+  scroller.on('move',function(){
+    console.log('move...');
+  })
 </script>
 </body>
 </html>
