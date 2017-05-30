@@ -49,7 +49,7 @@
     isOverscrolling = false,
     dragOffset = 0,
     lastOverscroll = 0,
-    ptrThreshold = 30,
+    ptrThreshold = 40,
     activated = false,
     scrollTime = 500,
     startY = null,
@@ -81,8 +81,8 @@
         nx.bindAll(HANDLERS, this);
 
         this._touchStartRes = nxEvent.on(scrollChild, touchStartEvent, this.handleTouchstart);
-        this._touchMoveRes = nxEvent.on(document, touchMoveEvent, this.handleTouchmove);
-        this._touchEndRes = nxEvent.on(document, touchEndEvent, this.handleTouchend);
+        this._touchMoveRes = nxEvent.on(scrollChild, touchMoveEvent, this.handleTouchmove);
+        this._touchEndRes = nxEvent.on(scrollChild, touchEndEvent, this.handleTouchend);
         this._scrollRes = nxEvent.on(scrollParent, 'scroll', this.handleScroll);
         this.overscroll(0);
       },
@@ -161,7 +161,6 @@
             screenX: e.screenX,
             screenY: e.screenY
           }];
-
         // Force mouse events to have had a down event first
         if (!startY && e.type == 'mousemove') {
           return;
@@ -239,7 +238,7 @@
       },
       overscroll: function (val) {
         scrollChild.style[CSS_TRANSFORM] = 'translate3d(0px, ' + val + 'px, 0px)';
-        refresher.style[CSS_TRANSFORM] = 'translate3d(0px, ' + (scrollChild.getBoundingClientRect().top - 40) + 'px, 0px)';
+        refresher.style[CSS_TRANSFORM] = 'translate3d(0px, ' + (val - 40) + 'px, 0px)';
         lastOverscroll = val;
         this.fire('move');
       },
