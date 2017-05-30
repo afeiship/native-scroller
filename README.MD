@@ -6,5 +6,5 @@
 
 ## todos:
 - [x] 下拉过程，如果有set text等动作（一切reflow/repaint）的，都会导致ios手机发抖(解决方案：position:fixed)
-- [ ] 下拉一半，想取消，scroll不正常
+- [ ] 下拉一半，想取消，scroll不正常，暂时无解
 
