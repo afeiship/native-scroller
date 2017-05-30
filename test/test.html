@@ -9,8 +9,8 @@
 </head>
 <body>
 <div class="ion-content overflow-scroll">
-  <div class="invisible ion-refresher">
-    下拉刷新...
+  <div class="ion-refresher">
+    下拉刷新
   </div>
 
   <div class="scroll body">
@@ -84,11 +84,12 @@
 
   scroller.on('load', function () {
     data.innerText = 'DATA::::_>' + Date.now();
-    refresher.innerText = '数据加载中';
+    refresher.innerHTML = '<img width="24" src="loading.gif" />'
   });
 
   scroller.on('loaded', function () {
     refresher.innerText = '加载完毕';
+
 
   });
 

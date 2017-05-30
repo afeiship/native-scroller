@@ -49,7 +49,7 @@
     isOverscrolling = false,
     dragOffset = 0,
     lastOverscroll = 0,
-    ptrThreshold = 40,
+    ptrThreshold = 50,
     activated = false,
     scrollTime = 500,
     startY = null,
@@ -61,6 +61,13 @@
 
 
   var NativeScroller = nx.declare('nx.NativeScroller', {
+    properties: {
+      bound: {
+        get: function () {
+          return scrollChild.getBoundingClientRect();
+        }
+      }
+    },
     methods: {
       init: function (inScrollParent, inScrollChild, inRefresher) {
         var HANDLERS = [
@@ -70,7 +77,7 @@
           'handleScroll',
           'activate',
           'deactivate',
-          'tail',
+          'tail'
         ];
 
         window.ss = this;
@@ -239,7 +246,7 @@
       },
       overscroll: function (val) {
         scrollChild.style[CSS_TRANSFORM] = 'translate3d(0px, ' + val + 'px, 0px)';
-        refresher.style[CSS_TRANSFORM] = 'translate3d(0px, ' + (val - 40) + 'px, 0px)';
+        refresher.style[CSS_TRANSFORM] = 'translate3d(0px, ' + (this.bound.top - 40) + 'px, 0px)';
         lastOverscroll = val;
         this.fire('move');
       },
@@ -257,13 +264,13 @@
         var self = this;
         if (enabled) {
           requestAnimationFrame(function () {
-            scrollChild.classList.add('overscroll');
+            // scrollChild.classList.add('overscroll');
             self.show();
           });
 
         } else {
           requestAnimationFrame(function () {
-            scrollChild.classList.remove('overscroll');
+            // scrollChild.classList.remove('overscroll');
             self.hide();
             self.deactivate();
           });
@@ -311,22 +318,15 @@
       },
       show: function () {
         this.fire('init');
-        refresher.classList.remove('invisible');
       },
       hide: function () {
-        refresher.classList.add('invisible');
       },
       activate: function () {
-        refresher.classList.add('active');
         this.fire('active');
       },
       deactivate: function () {
         var self = this;
         setTimeout(function () {
-          refresher.classList.remove('active');
-          refresher.classList.remove('refreshing');
-          refresher.classList.remove('refreshing-tail');
-
           if (activated) {
             activated = false;
             self.fire('finish');
@@ -334,13 +334,10 @@
         }, 150);
       },
       tail: function () {
-        refresher.classList.add('refreshing-tail');
-        this.fire('loaded')
+        this.fire('loaded');
       },
       start: function () {
         this.fire('load');
-        refresher.classList.add('refreshing');
-
         //todo: when load.then() to finish....
         this.finish();
       }
