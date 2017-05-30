@@ -34,7 +34,7 @@
 
   var NativeScroller = nx.declare('nx.NativeScroller', {
     properties: {
-      wrapperBound: {
+      containerBound: {
         get: function () {
           return scrollParent.getBoundingClientRect();
         }
@@ -55,7 +55,7 @@
           'activate',
           'deactivate',
           'show',
-          'tail',
+          'tail'
         ];
 
         window.ss = this;

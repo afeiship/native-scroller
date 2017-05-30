@@ -37,18 +37,6 @@ body {
   /*display: none;*/
 }
 
-.overflow-scroll > .scroll {
-  //-webkit-overflow-scrolling: touch;
-  //width: 100%;
-}
-
-.overflow-scroll > .scroll.overscroll {
-  //position: fixed;
-  //right: 0;
-  //left: 0;
-  //-webkit-user-drag: none;
-}
-
 .overflow-x {
   overflow-x: scroll;
   width: 100%;
