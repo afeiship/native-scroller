@@ -65,9 +65,9 @@
 
         nx.bindAll(HANDLERS, this);
 
-        this._touchStartRes = nxEvent.on(scrollChild, nxTouchEvents.touchStartEvent, this.handleTouchstart);
-        this._touchMoveRes = nxEvent.on(scrollChild, nxTouchEvents.touchMoveEvent, this.handleTouchmove);
-        this._touchEndRes = nxEvent.on(scrollChild, nxTouchEvents.touchEndEvent, this.handleTouchend);
+        this._touchStartRes = nxEvent.on(scrollChild, nxTouchEvents.TOUCH_START, this.handleTouchstart);
+        this._touchMoveRes = nxEvent.on(scrollChild, nxTouchEvents.TOUCH_MOVE, this.handleTouchmove);
+        this._touchEndRes = nxEvent.on(scrollChild, nxTouchEvents.TOUCH_END, this.handleTouchend);
         this._scrollRes = nxEvent.on(scrollParent, 'scroll', this.handleScroll);
         this.overscroll(0);
       },

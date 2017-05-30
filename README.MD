@@ -11,4 +11,5 @@
 - [ ] optimize 'activatePullToRrefresh' method
 - [ ] remove refresher from this project
 - [ ] finish infinite logic
+- [ ] init options with native-scroller
 
