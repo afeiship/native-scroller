@@ -7,7 +7,7 @@
 html,
 body {
   height: 100%;
-  -webkit-overflow-scrolling: touch;
+  //-webkit-overflow-scrolling: touch;
 }
 
 .ion-content {
@@ -37,7 +37,7 @@ body {
 }
 
 .overflow-scroll > .scroll {
-  -webkit-overflow-scrolling: touch;
+  //-webkit-overflow-scrolling: touch;
   width: 100%;
 }
 
