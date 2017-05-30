@@ -201,7 +201,6 @@
 
           // if we're not at overscroll 0 yet, 0 out
           if (lastOverscroll !== 0) {
-            console.log('here?');
             this.overscroll(0);
           }
           return;
@@ -258,13 +257,13 @@
         var self = this;
         if (enabled) {
           requestAnimationFrame(function () {
-            // scrollChild.classList.add('overscroll');
+            scrollChild.classList.add('overscroll');
             self.show();
           });
 
         } else {
           requestAnimationFrame(function () {
-            // scrollChild.classList.remove('overscroll');
+            scrollChild.classList.remove('overscroll');
             self.hide();
             self.deactivate();
           });

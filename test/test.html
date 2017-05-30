@@ -73,29 +73,24 @@
 
 
   scroller.on('init', function () {
-    console.log('init...');
     refresher.innerText = '下拉刷新';
   });
 
 
   scroller.on('active', function () {
-    console.log('active...');
     refresher.innerText = '释放更新';
   });
 
   scroller.on('load', function () {
-    console.log('start to load data...');
     refresher.innerText = '数据加载中';
   });
 
   scroller.on('loaded', function () {
-    console.log('loaded , to finish...');
     refresher.innerText = '加载完毕';
 
   });
 
   scroller.on('finish', function () {
-    console.log('finish!');
     refresher.innerText = '我走啦..';
   });
 </script>

@@ -257,13 +257,13 @@
         var self = this;
         if (enabled) {
           requestAnimationFrame(function () {
-            // scrollChild.classList.add('overscroll');
+            scrollChild.classList.add('overscroll');
             self.show();
           });
 
         } else {
           requestAnimationFrame(function () {
-            // scrollChild.classList.remove('overscroll');
+            scrollChild.classList.remove('overscroll');
             self.hide();
             self.deactivate();
           });
