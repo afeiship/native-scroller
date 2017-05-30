@@ -38,4 +38,17 @@ body {
   .overflow-x > .inner {
     width: 2000px; }
 
+#btn {
+  border: none;
+  background: #007aff;
+  color: #fff;
+  width: 90%;
+  display: block;
+  margin: 10px auto;
+  border-radius: 5px; }
+  #btn:focus {
+    outline: none; }
+  #btn:active {
+    background: #0062cc; }
+
 /*# sourceMappingURL=test.css.map */

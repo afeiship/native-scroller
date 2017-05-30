@@ -58,3 +58,21 @@ body {
     width: 2000px;
   }
 }
+
+
+#btn{
+  border: none;
+  background: #007aff;
+  color:#fff;
+  width:90%;
+  display: block;
+  margin:10px auto;
+  border-radius:5px;
+
+  &:focus{
+    outline:none;
+  }
+  &:active{
+    background: darken(#007aff,10%);
+  }
+}

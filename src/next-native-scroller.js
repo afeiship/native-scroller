@@ -4,38 +4,10 @@
 
   var nx = global.nx || require('next-js-core2');
   var nxEvent = nx.dom.Event || require('next-dom-event');
+  var nxThrottle = nx.throttle || require('next-debounce-throttle');
+  var nxTouchEvents = nx.TouchEvents || require('next-touch-events');
+  var requestAnimationFrame = global.requestAnimationFrame || require('raf-polyfill');
   var CSS_TRANSFORM = '-webkit-transform';
-
-  //raf polyfill:
-  var requestAnimationFrame = (function () {
-    return requestAnimationFrame ||
-      global.webkitRequestAnimationFrame ||
-      global.mozRequestAnimationFrame ||
-      function (callback) {
-        global.setTimeout(callback, 1000 / 60);
-      };
-  })();
-
-
-  //events detect:
-  var touchStartEvent, touchMoveEvent, touchEndEvent;
-  if (global.navigator.pointerEnabled) {
-    touchStartEvent = 'pointerdown';
-    touchMoveEvent = 'pointermove';
-    touchEndEvent = 'pointerup';
-  } else if (global.navigator.msPointerEnabled) {
-    touchStartEvent = 'MSPointerDown';
-    touchMoveEvent = 'MSPointerMove';
-    touchEndEvent = 'MSPointerUp';
-  } else if ('ontouchstart' in window) {
-    touchStartEvent = 'touchstart';
-    touchMoveEvent = 'touchmove';
-    touchEndEvent = 'touchend';
-  } else {
-    touchStartEvent = 'mousedown';
-    touchMoveEvent = 'mousemove';
-    touchEndEvent = 'mouseup';
-  }
 
   //animations:
   var Animate = {
@@ -62,7 +34,12 @@
 
   var NativeScroller = nx.declare('nx.NativeScroller', {
     properties: {
-      bound: {
+      wrapperBound: {
+        get: function () {
+          return scrollParent.getBoundingClientRect();
+        }
+      },
+      scrollerBound: {
         get: function () {
           return scrollChild.getBoundingClientRect();
         }
@@ -77,7 +54,8 @@
           'handleScroll',
           'activate',
           'deactivate',
-          'tail'
+          'show',
+          'tail',
         ];
 
         window.ss = this;
@@ -87,9 +65,9 @@
 
         nx.bindAll(HANDLERS, this);
 
-        this._touchStartRes = nxEvent.on(scrollChild, touchStartEvent, this.handleTouchstart);
-        this._touchMoveRes = nxEvent.on(scrollChild, touchMoveEvent, this.handleTouchmove);
-        this._touchEndRes = nxEvent.on(scrollChild, touchEndEvent, this.handleTouchend);
+        this._touchStartRes = nxEvent.on(scrollChild, nxTouchEvents.touchStartEvent, this.handleTouchstart);
+        this._touchMoveRes = nxEvent.on(scrollChild, nxTouchEvents.touchMoveEvent, this.handleTouchmove);
+        this._touchEndRes = nxEvent.on(scrollChild, nxTouchEvents.touchEndEvent, this.handleTouchend);
         this._scrollRes = nxEvent.on(scrollParent, 'scroll', this.handleScroll);
         this.overscroll(0);
       },
@@ -105,6 +83,11 @@
         }
         scrollParent = null;
         scrollChild = null;
+      },
+      activatePullToRrefresh: function () {
+        //todo: optimzie:
+        this.overscroll(50);
+        this.start();
       },
       finish: function () {
         var self = this;
@@ -240,13 +223,21 @@
           requestAnimationFrame(this.deactivate);
         }
       },
+      checkBounds: function () {
+        var self = this;
+        nxThrottle(function () {
+          console.log(self.scrollerBound.bottom - self.wrapperBound.bottom < 50);
+        }, 100);
+      },
       handleScroll: function (e) {
         // canOverscrol is used to greatly simplify the drag handler during normal scrolling
         canOverscroll = (e.target.scrollTop === 0) || isDragging;
+        this.fire('scroll');
+        this.checkBounds();
       },
       overscroll: function (val) {
-        scrollChild.style[CSS_TRANSFORM] = 'translate3d(0px, ' + val + 'px, 0px)';
-        refresher.style[CSS_TRANSFORM] = 'translate3d(0px, ' + (this.bound.top - 40) + 'px, 0px)';
+        scrollChild.style[CSS_TRANSFORM] = 'translate3d(0, ' + val + 'px, 0)';
+        refresher.style[CSS_TRANSFORM] = 'translate3d(0, ' + (this.scrollerBound.top - 40) + 'px, 0)';
         lastOverscroll = val;
         this.fire('move');
       },
@@ -261,19 +252,10 @@
       setScrollLock: function (enabled) {
         // set the scrollbar to be position:fixed in preparation to overscroll
         // or remove it so the app can be natively scrolled
-        var self = this;
         if (enabled) {
-          requestAnimationFrame(function () {
-            // scrollChild.classList.add('overscroll');
-            self.show();
-          });
-
+          requestAnimationFrame(this.show);
         } else {
-          requestAnimationFrame(function () {
-            // scrollChild.classList.remove('overscroll');
-            self.hide();
-            self.deactivate();
-          });
+          requestAnimationFrame(this.deactivate);
         }
       },
       scrollTo: function (Y, duration, callback) {
@@ -318,8 +300,6 @@
       },
       show: function () {
         this.fire('init');
-      },
-      hide: function () {
       },
       activate: function () {
         this.fire('active');
