@@ -226,7 +226,9 @@
       checkBounds: function () {
         var self = this;
         nxThrottle(function () {
-          console.log(self.scrollerBound.bottom - self.wrapperBound.bottom < 50);
+          if (self.scrollerBound.bottom - self.containerBound.bottom < 50) {
+            self.fire('infiniter:load');
+          }
         }, 100);
       },
       handleScroll: function (e) {

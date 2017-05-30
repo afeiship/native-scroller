@@ -128,6 +128,11 @@
   scroller.on('finish', function () {
     refresher.innerText = '我走啦..';
   });
+  scroller.on('infiniter:load', function () {
+//    refresher.innerText = '我走啦..';
+
+    console.log('load more data...');
+  });
 
 
   btn.onclick = function(){
