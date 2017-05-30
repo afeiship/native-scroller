@@ -201,6 +201,7 @@
 
           // if we're not at overscroll 0 yet, 0 out
           if (lastOverscroll !== 0) {
+            console.log('here?');
             this.overscroll(0);
           }
           return;
