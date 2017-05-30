@@ -9,15 +9,49 @@
 </head>
 <body>
 <div class="ion-content overflow-scroll">
+  <div class="invisible ion-refresher">
+    下拉刷新...
+  </div>
 
   <div class="scroll body">
-    <div class="invisible ion-refresher">
-      下拉刷新...
+    <h1>下面这段是scroll-x</h1>
+    <div class="overflow-x">
+      <div class="inner">
+        <p>test adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest
+          adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest
+          adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest adslfjsdfjtest
+          adslfjsdfj</p>
+      </div>
     </div>
-
-    <div class="bd">
-      real content...body content....
-    </div>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
   </div>
 
 </div>
@@ -32,35 +66,35 @@
   var child = document.querySelector('.body');
 
 
-  var scroller = new nx.NativeScroller(parent,child,refresher);
-  scroller.on('move',function(){
+  var scroller = new nx.NativeScroller(parent, child, refresher);
+  scroller.on('move', function () {
 //    console.log('move...');
   });
 
 
-  scroller.on('init',function(){
+  scroller.on('init', function () {
     console.log('init...');
     refresher.innerText = '下拉刷新';
   });
 
 
-  scroller.on('active',function(){
+  scroller.on('active', function () {
     console.log('active...');
     refresher.innerText = '释放更新';
   });
 
-  scroller.on('load',function(){
+  scroller.on('load', function () {
     console.log('start to load data...');
     refresher.innerText = '数据加载中';
   });
 
-  scroller.on('loaded',function(){
+  scroller.on('loaded', function () {
     console.log('loaded , to finish...');
     refresher.innerText = '加载完毕';
 
   });
 
-  scroller.on('finish',function(){
+  scroller.on('finish', function () {
     console.log('finish!');
     refresher.innerText = '我走啦..';
   });

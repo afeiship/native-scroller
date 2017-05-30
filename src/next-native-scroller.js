@@ -49,7 +49,7 @@
     isOverscrolling = false,
     dragOffset = 0,
     lastOverscroll = 0,
-    ptrThreshold = 60,
+    ptrThreshold = 30,
     activated = false,
     scrollTime = 500,
     startY = null,
@@ -68,6 +68,9 @@
           'handleTouchmove',
           'handleTouchend',
           'handleScroll',
+          'activate',
+          'deactivate',
+          'tail',
         ];
 
         window.ss = this;
@@ -78,10 +81,9 @@
         nx.bindAll(HANDLERS, this);
 
         this._touchStartRes = nxEvent.on(scrollChild, touchStartEvent, this.handleTouchstart);
-        this._touchMoveRes = nxEvent.on(scrollChild, touchMoveEvent, this.handleTouchmove);
-        this._touchEndRes = nxEvent.on(scrollChild, touchEndEvent, this.handleTouchend);
+        this._touchMoveRes = nxEvent.on(document, touchMoveEvent, this.handleTouchmove);
+        this._touchEndRes = nxEvent.on(document, touchEndEvent, this.handleTouchend);
         this._scrollRes = nxEvent.on(scrollParent, 'scroll', this.handleScroll);
-        this._refresherHeight = refresher.offsetHeight;
         this.overscroll(0);
       },
 
@@ -101,10 +103,10 @@
         var self = this;
         setTimeout(function () {
 
-          requestAnimationFrame(self.tail.bind(self));
+          requestAnimationFrame(self.tail);
 
           // scroll back to home during tail animation
-          self.scrollTo(0, scrollTime, self.deactivate.bind(self));
+          self.scrollTo(0, scrollTime, self.deactivate);
 
           // return to native scrolling after tail animation has time to finish
           setTimeout(function () {
@@ -149,7 +151,7 @@
 
             // the user has overscrolled but not far enough to trigger a refresh
           } else {
-            this.scrollTo(0, scrollTime, this.deactivate.bind(this));
+            this.scrollTo(0, scrollTime, this.deactivate);
             isOverscrolling = false;
           }
         }
@@ -224,11 +226,11 @@
         // update the icon accordingly
         if (!activated && lastOverscroll > ptrThreshold) {
           activated = true;
-          requestAnimationFrame(this.activate.bind(this));
+          requestAnimationFrame(this.activate);
 
         } else if (activated && lastOverscroll < ptrThreshold) {
           activated = false;
-          requestAnimationFrame(this.deactivate.bind(this));
+          requestAnimationFrame(this.deactivate);
         }
       },
       handleScroll: function (e) {
@@ -236,9 +238,10 @@
         canOverscroll = (e.target.scrollTop === 0) || isDragging;
       },
       overscroll: function (val) {
-        scrollChild.style[CSS_TRANSFORM] = 'translate3d(0px, ' + (val - this._refresherHeight) + 'px, 0px)';
+        scrollChild.style[CSS_TRANSFORM] = 'translate3d(0px, ' + val + 'px, 0px)';
+        refresher.style[CSS_TRANSFORM] = 'translate3d(0px, ' + (scrollChild.getBoundingClientRect().top - 40) + 'px, 0px)';
         lastOverscroll = val;
-        this.fire('move')
+        this.fire('move');
       },
       nativescroll: function (target, newScrollTop) {
         // creates a scroll event that bubbles, can be cancelled, and with its view
@@ -254,13 +257,13 @@
         var self = this;
         if (enabled) {
           requestAnimationFrame(function () {
-            scrollChild.classList.add('overscroll');
+            // scrollChild.classList.add('overscroll');
             self.show();
           });
 
         } else {
           requestAnimationFrame(function () {
-            scrollChild.classList.remove('overscroll');
+            // scrollChild.classList.remove('overscroll');
             self.hide();
             self.deactivate();
           });
