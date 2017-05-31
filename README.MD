@@ -7,10 +7,10 @@
 ## todos:
 - [x] when pulling ,set text, will fake. (solution：position:fixed)
 - [ ] can not cancel
-- [ ] trigger by function
+- [x] trigger by function
 - [ ] optimize 'activatePullToRrefresh' method
 - [ ] remove refresher from this project
-- [ ] finish infinite logic
+- [x] finish infinite logic
 - [ ] init options with native-scroller
 
 ## conclusion:
