@@ -8,6 +8,7 @@
   var nxTouchEvents = nx.TouchEvents || require('next-touch-events');
   var requestAnimationFrame = global.requestAnimationFrame || require('raf-polyfill');
   var CSS_TRANSFORM = '-webkit-transform';
+  var androidMathes = navigator.userAgent.match(/Android\s([0-9\.]*)/i);
 
   //animations:
   var Animate = {
@@ -175,6 +176,11 @@
         //     isDragging = true;
         //     e.preventDefault();
         //   }
+        if (androidMathes && androidMathes.length && deltaY > 0 && scrollParent.scrollTop === 0) {
+          //在微信X5里有问题
+          // isDragging = true;
+          // e.preventDefault();
+        }
 
 
         // if we've dragged up and back down in to native scroll territory

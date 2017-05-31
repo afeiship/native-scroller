@@ -7,12 +7,14 @@
 html,
 body {
   height: 100%;
-  -webkit-overflow-scrolling: touch;
+  //-webkit-overflow-scrolling: touch;
 }
 
 .ion-content {
   height: 100%;
   overflow: scroll;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
   //border: 10px solid #000;
 }
 

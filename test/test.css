@@ -5,12 +5,13 @@
 
 html,
 body {
-  height: 100%;
-  -webkit-overflow-scrolling: touch; }
+  height: 100%; }
 
 .ion-content {
   height: 100%;
-  overflow: scroll; }
+  overflow: scroll;
+  -webkit-user-drag: none;
+  -webkit-user-select: none; }
 
 .ion-content .body {
   height: 2000px; }
