@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Test2</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/Swiper/3.4.2/css/swiper.css"/>
+  <link rel="stylesheet" href="test.css">
+</head>
+<body>
+<div class="ion-content container">
+  <div class="ion-refresher">
+    下拉刷新
+  </div>
+
+  <div class="scroll body">
+    <button style="padding:20px;" id="btn">ActivatePullToRrefresh</button>
+
+
+    <h1>横向滚动-swiper</h1>
+    <div class="swiper-container swiper-container-horizontal" style="height:200px;">
+      <div class="swiper-wrapper" style="transition-duration: 0ms; transform: translate3d(-1080px, 0px, 0px);">
+        <div class="swiper-slide swiper-slide-prev" style="width: 1080px;">Slide 1</div>
+        <div class="swiper-slide swiper-slide-active" style="width: 1080px;">Slide 2</div>
+        <div class="swiper-slide swiper-slide-next" style="width: 1080px;">Slide 3</div>
+        <div class="swiper-slide" style="width: 1080px;">Slide 4</div>
+        <div class="swiper-slide" style="width: 1080px;">Slide 5</div>
+        <div class="swiper-slide" style="width: 1080px;">Slide 6</div>
+        <div class="swiper-slide" style="width: 1080px;">Slide 7</div>
+        <div class="swiper-slide" style="width: 1080px;">Slide 8</div>
+        <div class="swiper-slide" style="width: 1080px;">Slide 9</div>
+        <div class="swiper-slide" style="width: 1080px;">Slide 10</div>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets"><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span></div>
+    </div>
+
+
+    <div style="color:#f00;" id="data"></div>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+    <p>real content...body content....</p>
+  </div>
+
+</div>
+<script src="https://cdn.bootcss.com/fastclick/1.0.6/fastclick.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.min.js"></script>
+<script type="text/javascript" src="../node_modules/next-js-core2/dist/next-js-core2.js"></script>
+<script type="text/javascript" src="../node_modules/next-dom-event/dist/next-dom-event.js"></script>
+<script type="text/javascript" src="../node_modules/next-debounce-throttle/dist/next-debounce-throttle.js"></script>
+<script type="text/javascript" src="../node_modules/next-touch-events/dist/next-touch-events.js"></script>
+<script type="text/javascript" src="../node_modules/raf-polyfill/dist/raf-polyfill.js"></script>
+<script type="text/javascript" src="test2.js"></script>
+<script>
+
+  //attach fastclick:
+  FastClick.attach(document.body);
+
+  //swiper:
+
+  var swiper = new Swiper('.swiper-container', {
+    pagination: '.swiper-pagination',
+    paginationClickable: true
+  });
+
+
+
+  //refreisher
+  var refresher = document.querySelector('.ion-refresher');
+  var parent = document.querySelector('.ion-content');
+  var child = document.querySelector('.body');
+
+  var data = document.querySelector('#data');
+  var btn = document.querySelector('#btn');
+
+
+
+
+</script>
+</body>
+</html>
