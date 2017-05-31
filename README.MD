@@ -13,3 +13,6 @@
 - [ ] finish infinite logic
 - [ ] init options with native-scroller
 
+## conclusion:
++ no prefect solution in wechat X5 kenerl in android based on native scroller
+
