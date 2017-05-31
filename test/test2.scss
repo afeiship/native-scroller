@@ -11,7 +11,8 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-.ion-content {
+.wrapper {
+  padding:10px;
   height: 100%;
   overflow: scroll;
   -webkit-user-drag: none;
@@ -19,7 +20,7 @@ body {
   //border: 10px solid #000;
 }
 
-.ion-content .body {
+.scroller {
   height: 2000px;
 }
 
@@ -35,20 +36,6 @@ body {
   color: #999;
 }
 
-.invisible {
-  opacity: 0.01;
-  /*display: none;*/
-}
-
-.overflow-x {
-  overflow-x: scroll;
-  width: 100%;
-  padding: 20px;
-  border: 1px solid #f00;
-  > .inner {
-    width: 2000px;
-  }
-}
 
 
 #btn{
