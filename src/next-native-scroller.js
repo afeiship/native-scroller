@@ -176,12 +176,6 @@
         //     isDragging = true;
         //     e.preventDefault();
         //   }
-        if (androidMathes && androidMathes.length && deltaY > 0 && scrollParent.scrollTop === 0) {
-          //在微信X5里有问题
-          // isDragging = true;
-          // e.preventDefault();
-        }
-
 
         // if we've dragged up and back down in to native scroll territory
         if (deltaY - dragOffset <= 0 || scrollParent.scrollTop > 0) {

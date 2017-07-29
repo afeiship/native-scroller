@@ -12,6 +12,7 @@
 - [ ] remove refresher from this project
 - [x] finish infinite logic
 - [ ] init options with native-scroller
+- [ ] migrate with react-native/react
 
 ## conclusion:
 + Currently, no prefect solution in wechat X5 kenerl in android based on native scroller

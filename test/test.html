@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="test.css">
 </head>
 <body>
-<div class="ion-content container">
   <div class="ion-refresher">
     下拉刷新
   </div>
@@ -69,7 +68,6 @@
     <p>real content...body content....</p>
   </div>
 
-</div>
 <script src="https://cdn.bootcss.com/fastclick/1.0.6/fastclick.js"></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.min.js"></script>
 <script type="text/javascript" src="../node_modules/next-js-core2/dist/next-js-core2.js"></script>
@@ -94,7 +92,7 @@
 
   //refreisher
   var refresher = document.querySelector('.ion-refresher');
-  var parent = document.querySelector('.ion-content');
+  var parent = document.querySelector('body');
   var child = document.querySelector('.body');
 
   var data = document.querySelector('#data');
