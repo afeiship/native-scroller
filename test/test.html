@@ -72,7 +72,8 @@
 <script type="text/javascript" src="https://cdn.bootcss.com/Swiper/3.4.2/js/swiper.min.js"></script>
 <script type="text/javascript" src="../node_modules/next-js-core2/dist/next-js-core2.js"></script>
 <script type="text/javascript" src="../node_modules/next-dom-event/dist/next-dom-event.js"></script>
-<script type="text/javascript" src="../node_modules/next-debounce-throttle/dist/next-debounce-throttle.js"></script>
+<script type="text/javascript" src="../node_modules/next-throttle/dist/next-throttle.js"></script>
+<script type="text/javascript" src="../node_modules/next-bind/dist/next-bind.js"></script>
 <script type="text/javascript" src="../node_modules/next-touch-events/dist/next-touch-events.js"></script>
 <script type="text/javascript" src="../node_modules/raf-polyfill/dist/raf-polyfill.js"></script>
 <script src="../dist/next-native-scroller.js"></script>
@@ -113,6 +114,7 @@
   });
 
   scroller.on('load', function () {
+    console.log('load data...')
     data.innerText = 'DATA::::_>' + Date.now();
     refresher.innerHTML = '<img width="24" src="loading.gif" />'
   });
@@ -124,7 +126,7 @@
   });
 
   scroller.on('finish', function () {
-    refresher.innerText = '我走啦..';
+    refresher.innerText = '加载完毕';
   });
   scroller.on('infiniter:load', function () {
 //    refresher.innerText = '我走啦..';

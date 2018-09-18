@@ -4,7 +4,8 @@
 
   var nx = global.nx || require('next-js-core2');
   var nxEvent = nx.dom.Event || require('next-dom-event');
-  var nxThrottle = nx.throttle || require('next-debounce-throttle');
+  var nxThrottle = nx.throttle || require('next-throttle');
+  var nxBind = nx.bind || require('next-bind');
   var nxTouchEvents = nx.TouchEvents || require('next-touch-events');
   var requestAnimationFrame = global.requestAnimationFrame || require('raf-polyfill');
   var CSS_TRANSFORM = '-webkit-transform';
@@ -59,12 +60,11 @@
           'tail'
         ];
 
-        window.ss = this;
         scrollParent = inScrollParent;
         scrollChild = inScrollChild;
         refresher = inRefresher;
 
-        nx.bindAll(HANDLERS, this);
+        nxBind(this, HANDLERS);
 
         this._touchStartRes = nxEvent.on(scrollChild, nxTouchEvents.TOUCH_START, this.handleTouchstart);
         this._touchMoveRes = nxEvent.on(scrollChild, nxTouchEvents.TOUCH_MOVE, this.handleTouchmove);
@@ -113,9 +113,9 @@
       },
       handleTouchstart: function (e) {
         e.touches = e.touches || [{
-            screenX: e.screenX,
-            screenY: e.screenY
-          }];
+          screenX: e.screenX,
+          screenY: e.screenY
+        }];
 
         startY = Math.floor(e.touches[0].screenY);
       },
@@ -149,9 +149,9 @@
       },
       handleTouchmove: function (e) {
         e.touches = e.touches || [{
-            screenX: e.screenX,
-            screenY: e.screenY
-          }];
+          screenX: e.screenX,
+          screenY: e.screenY
+        }];
 
         // Force mouse events to have had a down event first
         if (!startY && e.type == 'mousemove') {
@@ -176,12 +176,6 @@
         //     isDragging = true;
         //     e.preventDefault();
         //   }
-        if (androidMathes && androidMathes.length && deltaY > 0 && scrollParent.scrollTop === 0) {
-          //在微信X5里有问题
-          // isDragging = true;
-          // e.preventDefault();
-        }
-
 
         // if we've dragged up and back down in to native scroll territory
         if (deltaY - dragOffset <= 0 || scrollParent.scrollTop > 0) {

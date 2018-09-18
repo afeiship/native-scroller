@@ -24,9 +24,10 @@
     "yargs": "^4.7.1"
   },
   "dependencies": {
-    "next-debounce-throttle": "github:afeiship/next-debounce-throttle",
+    "next-bind": "github:afeiship/next-bind",
     "next-dom-event": "github:afeiship/next-dom-event",
     "next-js-core2": "github:afeiship/next-js-core2",
+    "next-throttle": "github:afeiship/next-throttle",
     "next-touch-events": "github:afeiship/next-touch-events",
     "raf-polyfill": "github:afeiship/raf-polyfill"
   }
